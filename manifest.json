@@ -1,0 +1,7 @@
+{
+    "name": "TDx Toolkit",
+    "description": "A toolkit for TDx",
+    "version": "0.1.0",
+    "manifest_version": 3,
+    "minimum_chrome_version": "92"
+}
