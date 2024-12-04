@@ -3,5 +3,9 @@
     "description": "A toolkit for TDx",
     "version": "0.1.0",
     "manifest_version": 3,
+    "icons": {
+        "32": "images/michigan32.png",
+        "128": "images/michigan128.png"
+    },
     "minimum_chrome_version": "92"
 }
