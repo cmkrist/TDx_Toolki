@@ -7,7 +7,7 @@ Thank you for considering contributing to TDx Toolkit! We welcome contributions 
 1. **Fork the repository**: Click the "Fork" button at the top right of the repository page.
 2. **Clone your fork**: Clone your forked repository to your local machine.
     ```bash
-    git clone https://github.com/your-username/tk2.git
+    git clone https://github.com/your-username/TDx_Toolkit.git
     ```
 3. **Create a branch**: Create a new branch for your feature or bugfix.
     ```bash
