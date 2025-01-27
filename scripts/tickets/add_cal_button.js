@@ -89,14 +89,12 @@ function generateModal(title, description) {
     dateInput.id = 'eventDate';
     dateInput.required = true;
     dateInput.min = new Date().toISOString().split('T')[0];
-    dateInput.value = new Date().toISOString().split('T')[0];
     dateInput.style.marginBottom = '0.5rem';
     // Create time input
     const timeInput = document.createElement('input');
     timeInput.type = 'time';
     timeInput.id = 'eventTime';
     timeInput.required = true;
-    timeInput.value = new Date().toTimeString().split(' ')[0];
     timeInput.style.marginBottom = '0.5rem';
     // Create duration select
     const durationSelect = document.createElement('select');
@@ -106,6 +104,23 @@ function generateModal(title, description) {
     durationSelect.innerHTML = durations.map(duration => `<option value="${duration}">${duration} minutes</option>`).join('');
     durationSelect.value = 60;
     durationSelect.style.marginBottom = '0.5rem';
+    // Set Date and Time
+    const dateSel = document.querySelector("#divAttribute8727 > div:nth-child(4) > span");
+    const querystr = dateSel.textContent.split(" ");
+    const date = querystr[0].split("/");
+    let time = querystr[1];
+    if(querystr[2] === "PM") {
+        // Convert to 24 hour time
+        let tmpTime = time.split(":");
+        const h = parseInt(tmpTime[0]) + 12;
+        time = `${h}:${tmpTime[1]}`;
+    } else if (parseInt(time.split(":")[0]) < 10) {
+        // Fix for single digit hours
+        time = `0${time}`;
+    }
+    console.log(time);
+    dateInput.value = `${date[2]}-${date[0]}-${date[1]}`;
+    timeInput.value = time;
     // Put it all together
     fieldset.appendChild(dateInput);
     fieldset.appendChild(timeInput);
