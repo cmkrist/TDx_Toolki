@@ -1,0 +1,6 @@
+-- Add MRS check to make sure you aren't scheduling on a day off
+-- Add check to see if you already have an appt at that time
+-- Cleanup UI for addtocalendar
+-- CronJob 1/day check if appts scheduled on MRS day
+-- On scheduled submit, add to calendar automatically
+    -* Make this toggleable behavior in the settings window
