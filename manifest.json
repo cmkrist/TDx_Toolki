@@ -33,14 +33,6 @@
             "matches": ["https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/TicketDet*"],
             "js": ["scripts/tickets/add_cal_button.js"],
             "run_at": "document_end"
-        },
-        {
-            "matches": [
-                "https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/TicketDet.aspx*",
-                "https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/Update?*"
-            ],
-            "js": ["scripts/tickets/submission_watcher.js"],
-            "run_at": "document_end"
         }
     ],
     "oauth2": {
