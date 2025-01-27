@@ -1,8 +1,20 @@
 {
+    "manifest_version": 3,
     "name": "TDx Toolkit",
     "description": "A toolkit for TDx",
-    "version": "0.1.0",
-    "manifest_version": 3,
+    "version": "1.0.0",
+    "minimum_chrome_version": "92",
+    "permissions": [
+        "identity",
+        "storage"
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "host_permissions": [
+        "https://teamdynamix.umich.edu/*",
+        "https://www.googleapis.com/*"
+    ],
     "icons": {
         "32": "images/michigan32.png",
         "128": "images/michigan128.png"
@@ -11,13 +23,31 @@
         "service_worker": "scripts/background.js",
         "type": "module"
     },
-    "minimum_chrome_version": "92",
     "content_scripts": [
         {
             "matches": ["https://teamdynamix.umich.edu/TDNext/Home/Desktop/Default.aspx"],
             "js": ["scripts/main/logo.js"],
             "run_at": "document_end"
+        },
+        {
+            "matches": ["https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/TicketDet*"],
+            "js": ["scripts/tickets/add_cal_button.js"],
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/TicketDet.aspx*",
+                "https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/Update?*"
+            ],
+            "js": ["scripts/tickets/submission_watcher.js"],
+            "run_at": "document_end"
         }
+    ],
+    "oauth2": {
+    "client_id": "75844921930-h4a5e7k79otbairsvlbfv0ntr4p8cl29.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar"
     ]
+  }
 
 }
