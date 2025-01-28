@@ -1,13 +1,23 @@
 const init = async () => {
     // Load Settings from storage
-    const settings = await chrome.storage.sync.get('tdx_options').tdx_options;
+    let settings = (await chrome.storage.sync.get('tdx_options')).tdx_options;
+    if (!settings) {
+        console.error('No settings found');
+        settings = {
+            default_calendar: null,
+            default_duration: 30,
+            default_reminder: 15,
+            default_color: '#000000',
+            auto_schedule: false
+        };
+    }
     // Populate Values
-    populateCalendars();
+    await populateCalendars();
     // Set default values
-    document.getElementById('auto-schedule').checked = settings.auto_schedule;
+    document.getElementById('auto-schedule').checked = settings.auto_schedule || false;
     document.getElementById('auto-schedule').disabled = false;
     const defaultCalendar = settings.default_calendar;
-    if (defaultCalendar) calendarElement.value = defaultCalendar.id;
+    if (defaultCalendar) document.getElementById("default-calendar").value = defaultCalendar.id;
     // Event Listeners
     setSaveButtonListener();
 };
@@ -17,6 +27,7 @@ const populateCalendars = async () => {
     const calendars = await getAllOwnedCalendars();
     calendarElement.disabled = false;
     calendarElement.innerHTML = calendars.map(calendar => `<option value="${calendar.id}">${calendar.name}</option>`).join('');
+    return true;
 };
 // Working
 const setSaveButtonListener = () => {
