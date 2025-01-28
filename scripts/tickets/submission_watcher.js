@@ -1,5 +1,4 @@
 // Add to calendar on TDx ticket submission
-const SETTINGS = {};
 const tdxIdElement = document.querySelector('#btnCopyID > span');
 const tdxId = tdxIdElement.textContent;
 const title = document.querySelector("h1").textContent.trim();
@@ -15,15 +14,6 @@ const StatusIDs = {
 }
 
 async function init() {
-    // Load settings from storage
-    const settings = await new Promise((resolve, reject) => {
-        chrome.storage.sync.get("tdx_options", (data) => {
-            resolve(data.tdx_options);
-        });
-    });
-    Object.keys(settings).forEach(key => {
-        SETTINGS[key] = settings[key];
-    });
     // Insert the auto schedule checkbox
     document.getElementById("NewStatusId").parentElement.appendChild(generateAutoSchedule());
     console.log("Submission Watcher Loaded : " + tdxId);

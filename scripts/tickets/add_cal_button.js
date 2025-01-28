@@ -48,7 +48,13 @@ function submitCalendarEvent() {
         end: TICKET.end,
         url: window.location.href
     };
-    chrome.runtime.sendMessage({ fn: 'ADD_EVENT', event });
+    chrome.runtime.sendMessage({ fn: 'ADD_EVENT', event })
+        .then(response => {
+            console.log(response);
+            document.getElementById("calendar-modal").remove();
+        }).catch(err => {
+            console.error(err);
+        })
 }
 
 // Element Generation

@@ -24,7 +24,6 @@ function addDuration(time, duration) {
     const totalMinutes = parseInt(hours) * 60 + parseInt(minutes) + parseInt(duration);
     const newHours = doubleDigit(Math.floor(totalMinutes / 60));
     const newMinutes = doubleDigit(totalMinutes % 60);
-    newMinutes = newMinutes < 10 ? `0${newMinutes}` : newMinutes;
     return `${newHours}:${newMinutes}`;
 }
 

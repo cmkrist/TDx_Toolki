@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             });
             if (response.ok) {
                 console.log('Event added successfully');
-                sendResponse(true);
+                sendResponse("OK");
             } else {
                 throw new Error('Failed to add event');
             }
