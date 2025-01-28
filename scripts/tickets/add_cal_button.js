@@ -10,8 +10,18 @@ const TICKET = {
     url: null,
     duration: null,
 }
+const SETTINGS = {};
 
-function init() {
+async function init() {
+    // Load Settings from storage
+    const settings = (await chrome.storage.sync.get('tdx_options')).tdx_options;
+    if (!settings) {
+        console.error('No settings found');
+        return;
+    }
+    Object.keys(settings).forEach(key => {
+        SETTINGS[key] = settings[key];
+    });
     // Set Globals
     TICKET.id = document.querySelector('#btnCopyID > span').textContent;
     TICKET.title = document.querySelector('#thTicket_spnTitle').textContent;
@@ -55,7 +65,7 @@ function init() {
         date = [month, day, year];
     }
     TICKET.start = `${date[2]}-${date[0]}-${date[1]} ${time}`;
-    TICKET.end = `${date[2]}-${date[0]}-${date[1]} ${addDuration(time, 60)}`;
+    TICKET.end = `${date[2]}-${date[0]}-${date[1]} ${addDuration(time, SETTINGS.default_duration)}`;
     console.log(TICKET);
     // Add Calendar Button
     const calendarButton = generateCalendarButton();
@@ -187,7 +197,7 @@ function generateForm() {
     durationSelect.required = true;
     const durations = [15, 30, 45, 60, 90, 120];
     durationSelect.innerHTML = durations.map(duration => `<option value="${duration}">${duration} minutes</option>`).join('');
-    durationSelect.value = 60;
+    durationSelect.value = SETTINGS.default_duration;
     durationSelect.style.marginBottom = '0.5rem';
     // Set Date and Time
     dateInput.value = TICKET.start.split(' ')[0];
