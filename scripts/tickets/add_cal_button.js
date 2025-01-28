@@ -41,16 +41,22 @@ function init() {
         // Set time to now
         const now = new Date();
         const hours = now.getHours();
-        const minutes = now.getMinutes();
-        time = `${hours}:${minutes}`;
+        let minutes = now.getMinutes();
+        const remainder = minutes % 15;
+        minutes = minutes + (remainder < 8 ? -remainder : 15 - remainder);
+        time = addDuration(`${hours}:${minutes}`, 0);
         // Set date to today
         const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
+        let month = now.getMonth() + 1;
+        let day = now.getDate();
+        // Fix for single digit months and days
+        month = month < 10 ? `0${month}` : month;
+        day = day < 10 ? `0${day}` : day;
         date = [month, day, year];
     }
     TICKET.start = `${date[2]}-${date[0]}-${date[1]} ${time}`;
     TICKET.end = `${date[2]}-${date[0]}-${date[1]} ${addDuration(time, 60)}`;
+    console.log(TICKET);
     // Add Calendar Button
     const calendarButton = generateCalendarButton();
     document.querySelector("#divTabHeader ul").appendChild(calendarButton);
@@ -173,6 +179,7 @@ function generateForm() {
     timeInput.type = 'time';
     timeInput.id = 'eventTime';
     timeInput.required = true;
+    timeInput.step = 900;
     timeInput.style.marginBottom = '0.5rem';
     // Create duration select
     const durationSelect = document.createElement('select');
@@ -184,9 +191,7 @@ function generateForm() {
     durationSelect.style.marginBottom = '0.5rem';
     // Set Date and Time
     dateInput.value = TICKET.start.split(' ')[0];
-    let t=addDuration(TICKET.start.split(' ')[1], 0)
-    console.log(t);
-    timeInput.value = t;
+    timeInput.value = addDuration(TICKET.start.split(' ')[1], 0);
     
     // Put it all together
     fieldset.appendChild(dateInput);
