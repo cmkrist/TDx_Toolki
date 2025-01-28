@@ -19,7 +19,7 @@ const populateCalendars = async () => {
     calendarElement.innerHTML = calendars.map(calendar => `<option value="${calendar.id}">${calendar.name}</option>`).join('');
 };
 // Working
-const setSaveButtonListener = (calendarElement) => {
+const setSaveButtonListener = () => {
     // Element Vars
     const saveButton = document.getElementById('save-button');
     const calendarElement = document.getElementById('default-calendar');
@@ -31,7 +31,7 @@ const setSaveButtonListener = (calendarElement) => {
             name: calendarElement.options[calendarElement.selectedIndex].text
         }
         await chrome.storage.sync.set({ 'tdx_calendar': Calendar });
-        await crhome.storage.sync.set({ 'tdx_options': { 
+        await chrome.storage.sync.set({ 'tdx_options': { 
             'default_calendar': Calendar,
             'default_duration': 30,
             'default_reminder': 15,
