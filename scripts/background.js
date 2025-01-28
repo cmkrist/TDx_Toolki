@@ -70,6 +70,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 throw new Error('Failed to add event');
             }
             break;
+        case "FORM_SUBMISSION":
+            console.log(request.data);
+            console.log("NOT IMPLEMENTED");
+            break;
         default:
             console.log('Invalid function');
             console.log(request.fn);

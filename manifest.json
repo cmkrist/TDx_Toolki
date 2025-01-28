@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "TDx Toolkit",
     "description": "A toolkit for TDx",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "minimum_chrome_version": "92",
     "permissions": [
         "identity",
@@ -32,6 +32,11 @@
         {
             "matches": ["https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/TicketDet*"],
             "js": ["scripts/tickets/add_cal_button.js"],
+            "run_at": "document_end"
+        },
+        {
+            "matches": ["https://teamdynamix.umich.edu/TDNext/Apps/31/Tickets/Update?*"],
+            "js": ["scripts/tickets/submission_watcher.js"],
             "run_at": "document_end"
         }
     ],
