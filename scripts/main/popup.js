@@ -6,7 +6,7 @@ const defaultDuration = document.getElementById('default-duration');
 const defaultColor = document.getElementById('default-color');
 const autoSchedule = document.getElementById('auto-schedule');
 // Init
-const init = async () => {
+(async () => {
     // Load Settings from storage
     let settings = (await chrome.storage.sync.get('tdx_options')).tdx_options;
     if (!settings) {
@@ -17,21 +17,20 @@ const init = async () => {
             auto_schedule: false
         };
     }
-    console.log(settings);
     // Populate Values
     await populateCalendars();
     // Set default values
-    if (settings.default_calendar) document.getElementById("default-calendar").value = settings.default_calendar.id;
-    if (settings.default_duration) document.getElementById("default-duration").value = settings.default_duration;
-    document.getElementById('auto-schedule').checked = settings.auto_schedule || false;
+    if (settings.default_calendar) defaultCalendar.value = settings.default_calendar.id;
+    if (settings.default_duration) defaultDuration.value = settings.default_duration;
+    if (settings.auto_schedule) autoSchedule.checked = settings.auto_schedule;
     // Enable Inputs
-    document.getElementById('default-calendar').disabled = false;
-    document.getElementById('default-duration').disabled = false;
-    document.getElementById('auto-schedule').disabled = false;
-    
+    defaultCalendar.disabled = false;
+    defaultDuration.disabled = false;
+    autoSchedule.disabled = false;
     // Event Listeners
     setSaveButtonListener();
-};
+})
+
 // Working
 const populateCalendars = async () => {
     const calendarElement = document.getElementById('default-calendar');
@@ -51,11 +50,13 @@ const setSaveButtonListener = () => {
             id: calendarElement.value,
             name: calendarElement.options[calendarElement.selectedIndex].text
         }
-        await chrome.storage.sync.set({ 'tdx_options': { 
-            'default_calendar': Calendar,
-            'default_duration': defaultDuration.value,
-            'auto_schedule': autoScheduleElement.checked
-        } });
+        await chrome.storage.sync.set({
+            'tdx_options': {
+                'default_calendar': Calendar,
+                'default_duration': defaultDuration.value,
+                'auto_schedule': autoScheduleElement.checked
+            }
+        });
         window.close();
     });
 };
@@ -69,13 +70,13 @@ const getAllOwnedCalendars = async () => {
             headers: {
                 'Authorization': `Bearer ${token.token}`,
                 'Content-Type': 'application/json'
-              },
+            },
         });
         if (response.ok) {
             const data = await response.json();
             const calendars = new Array();
             data.items.forEach(calendar => {
-                if(calendar.accessRole === 'owner') {
+                if (calendar.accessRole === 'owner') {
                     calendars.push({
                         id: calendar.id,
                         name: calendar.summary
@@ -88,5 +89,3 @@ const getAllOwnedCalendars = async () => {
         console.error(error);
     }
 };
-
-init();
