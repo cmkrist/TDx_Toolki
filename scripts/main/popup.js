@@ -14,7 +14,6 @@ const init = async () => {
         settings = {
             default_calendar: null,
             default_duration: 60,
-            default_color: '#000000',
             auto_schedule: false
         };
     }
@@ -24,7 +23,6 @@ const init = async () => {
     // Set default values
     if (settings.default_calendar) document.getElementById("default-calendar").value = settings.default_calendar.id;
     if (settings.default_duration) document.getElementById("default-duration").value = settings.default_duration;
-    if (settings.default_color) document.getElementById("default-color").value = settings.default_color;
     document.getElementById('auto-schedule').checked = settings.auto_schedule || false;
     // Enable Inputs
     document.getElementById('default-calendar').disabled = false;
@@ -57,7 +55,6 @@ const setSaveButtonListener = () => {
         await chrome.storage.sync.set({ 'tdx_options': { 
             'default_calendar': Calendar,
             'default_duration': defaultDuration.value,
-            'default_color': defaultColor.value,
             'auto_schedule': autoScheduleElement.checked
         } });
         window.close();
