@@ -27,7 +27,6 @@ const init = async () => {
     // Enable Inputs
     document.getElementById('default-calendar').disabled = false;
     document.getElementById('default-duration').disabled = false;
-    document.getElementById('default-color').disabled = false;
     document.getElementById('auto-schedule').disabled = false;
     
     // Event Listeners
