@@ -1,22 +1,27 @@
-let defaultCalendarName = undefined;
-
-chrome.storage.sync.get("tdx_calendar", (data) => {
-    defaultCalendarName = data.tdx_calendar.name;
-    console.log("Name Set");
+const SETTINGS = {};
+// Load Settings
+chrome.storage.sync.get("tdx_options", (data) => {
+    Object.keys(data.tdx_options).forEach(key => {
+        SETTINGS[key] = data.tdx_options[key];
+    });
+    console.log("Settings Loaded");
 });
-
+// Watch for Document Changes
 chrome.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-      console.log(
-        `Storage key "${key}" in namespace "${namespace}" changed.`,
-        `Old value was "${oldValue}", new value is "${newValue}".`
-      );
+        if(key === 'tdx_options') {
+            Object.keys(newValue).forEach(key => {
+                SETTINGS[key] = newValue[key];
+            });
+            console.log("Settings Updated from remote storage");
+        };
     }
-  });
+});
+// Listen for Messages
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    switch(request.fn) {
+    switch (request.fn) {
         case 'GET_DEFAULT_CALENDAR':
-            sendResponse(defaultCalendarName);
+            sendResponse(SETTINGS.default_calendar.name);
             break;
         case 'ADD_EVENT':
             /** Appt Object Definition
@@ -30,7 +35,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
              * }
              */
             const appt = request.event;
-            const calendar = await getDefaultCalendar();
+            const calendar = SETTINGS.default_calendar;
             const token = await chrome.identity.getAuthToken({ interactive: true });
             const event = {
                 summary: appt.title,
@@ -58,31 +63,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 },
                 body: JSON.stringify(event)
             });
-            if(response.ok) {
+            if (response.ok) {
                 console.log('Event added successfully');
                 sendResponse(true);
             } else {
                 throw new Error('Failed to add event');
-                sendResponse(false);
             }
             break;
         default:
             console.log('Invalid function');
             console.log(request.fn);
+            break;
     }
 });
-
-const getDefaultCalendar = async () => {
-    const cal = (await chrome.storage.sync.get("tdx_calendar")).tdx_calendar || {};
-    return cal;
-}
-const getAuthToken = async () => {
-    try {
-        const token = await chrome.identity.getAuthToken({ interactive: true });
-        console.log(token || 'No token');
-        return token;
-    }
-    catch (error) {
-        console.error(error);
-    }
-}
