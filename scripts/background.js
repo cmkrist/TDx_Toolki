@@ -24,16 +24,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             sendResponse(SETTINGS.default_calendar.name);
             break;
         case 'ADD_EVENT':
-            /** Appt Object Definition
-             * {
-             * title: string,
-             * description: string,
-             * location: string,
-             * start: Date,
-             * end: Date,
-             * url: string
-             * }
-             */
             const appt = request.event;
             const calendar = SETTINGS.default_calendar;
             const token = await chrome.identity.getAuthToken({ interactive: true });
@@ -72,7 +62,39 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             break;
         case "FORM_SUBMISSION":
             console.log(request.data);
-            console.log("NOT IMPLEMENTED");
+            const tkn = await chrome.identity.getAuthToken({ interactive: true });
+            const evnt = {
+                summary: request.data.title,
+                description: request.data.description,
+                eventType: 'default',
+                location: request.data.location || '',
+                source: {
+                    title: 'TDx Ticket Link',
+                    url: request.data.url
+                },
+                start: {
+                    dateTime: new Date(request.data.start).toISOString(),
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                },
+                end: {
+                    dateTime: new Date(request.data.end).toISOString(),
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                }
+            };
+            const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${SETTINGS.default_calendar.id}/events`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${tkn.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(evnt)
+            });
+            if (res.ok) {
+                console.log('Event added successfully');
+                sendResponse(true);
+            } else {
+                throw new Error('Failed to add event');
+            }
             break;
         default:
             console.log('Invalid function');
