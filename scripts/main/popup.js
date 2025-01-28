@@ -29,7 +29,7 @@ const autoSchedule = document.getElementById('auto-schedule');
     autoSchedule.disabled = false;
     // Event Listeners
     setSaveButtonListener();
-})
+})();
 
 // Working
 const populateCalendars = async () => {
