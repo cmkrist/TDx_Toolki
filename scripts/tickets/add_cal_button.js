@@ -13,10 +13,10 @@ const TICKET = {
 
 async function init() {
     // Set Globals
-    TICKET.id = document.querySelector('#btnCopyID > span').textContent || "No ID Provided";
-    TICKET.title = document.querySelector('#thTicket_spnTitle').textContent || "No Title Provided";
-    TICKET.description = `TDx ${TICKET.id}\n ${(document.querySelector('#ttDescription').textContent).trim()}` || "No Description Provided";
-    TICKET.location = document.querySelector("#lblLocation").textContent.trim() || "No Location Provided";
+    TICKET.id = document.querySelector('#btnCopyID > span')?.textContent || "No ID Provided";
+    TICKET.title = document.querySelector('#thTicket_spnTitle')?.textContent || "No Title Provided";
+    TICKET.description = `TDx ${TICKET.id}\n ${(document.querySelector('#ttDescription')?.textContent).trim()}` || "No Description Provided";
+    TICKET.location = document.querySelector("#lblLocation")?.textContent.trim() || "No Location Provided";
     TICKET.url = window.location.href;
     // Set Dates
     let dateString;
