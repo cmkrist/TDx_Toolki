@@ -39,6 +39,14 @@ function submitCalendarEvent() {
     const dateInput = document.querySelector('#eventDate');
     const timeInput = document.querySelector('#eventTime');
     const durationSelect = document.querySelector('#duration');
+    // If AM and before 6am, confirm with user if they meant PM
+    if (parseInt(timeInput.value.split(':')[0]) < 6) {
+        if (confirm("You have selected a time before 6AM. Are you sure you meant AM?")) {
+            return;
+        } else {
+            timeInput.value = addDuration(timeInput.value, 12);
+        }
+    }
     // Update Start and End
     TICKET.start = `${dateInput.value} ${addDuration(timeInput.value, 0)}`;
     TICKET.end = `${dateInput.value} ${addDuration(timeInput.value, durationSelect.value)}`;
