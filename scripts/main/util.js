@@ -156,6 +156,7 @@ const openNotification = (title, message) => {
 
 const closeNotification = () => {
     const notificationWindow = document.getElementById('notificationWindow');
+    if(notificationWindow.style.right === '-100%') return;
     notificationWindow.style.right = '-100%';
     notificationWindow.style.opacity = 0;
 }

@@ -62,6 +62,7 @@ function submitCalendarEvent() {
         .then(response => {
             console.log(response);
             document.getElementById("calendar-modal").remove();
+            Notify("Event Added", "Event has been added to your calendar at " + dateInput.value, 5);
         }).catch(err => {
             console.error(err);
         })
