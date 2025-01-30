@@ -13,10 +13,10 @@ const TICKET = {
 
 async function init() {
     // Set Globals
-    TICKET.id = document.querySelector('#btnCopyID > span').textContent;
-    TICKET.title = document.querySelector('#thTicket_spnTitle').textContent;
-    TICKET.description = `TDx ${TICKET.id}\n ${(document.querySelector('#ttDescription').textContent).trim()}`;
-    TICKET.location = document.querySelector("#lblLocation").textContent.trim();
+    TICKET.id = document.querySelector('#btnCopyID > span').textContent || "No ID Provided";
+    TICKET.title = document.querySelector('#thTicket_spnTitle').textContent || "No Title Provided";
+    TICKET.description = `TDx ${TICKET.id}\n ${(document.querySelector('#ttDescription').textContent).trim()}` || "No Description Provided";
+    TICKET.location = document.querySelector("#lblLocation").textContent.trim() || "No Location Provided";
     TICKET.url = window.location.href;
     // Set Dates
     let dateString;
@@ -30,7 +30,9 @@ async function init() {
     TICKET.end = addTimeToDate(dateString, SETTINGS.default_duration);
     // Add Calendar Button
     const calendarButton = generateCalendarButton();
-    document.querySelector("#divTabHeader ul").appendChild(calendarButton);
+    const li = document.createElement('li');
+    li.appendChild(calendarButton);
+    document.querySelector("#divTabHeader ul").appendChild(li);
 }
 
 function submitCalendarEvent() {
