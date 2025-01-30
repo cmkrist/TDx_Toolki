@@ -57,6 +57,7 @@ const setSaveButtonListener = () => {
                 'auto_schedule': autoScheduleElement.checked
             }
         });
+        chrome.runtime.sendMessage({ fn: 'UPDATE_SETTINGS' });
         window.close();
     });
 };

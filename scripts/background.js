@@ -1,19 +1,19 @@
-const SETTINGS = {};
-// Load Settings
-chrome.storage.sync.get("tdx_options", (data) => {
-    Object.keys(data.tdx_options).forEach(key => {
-        SETTINGS[key] = data.tdx_options[key];
-    });
-    console.log("Settings Loaded");
+const SETTINGS = {
+    default_calendar: {
+        name: 'Primary',
+        id: 'primary'
+    },
+    default_duration: 60,
+    auto_schedule: false
+};
+// Event Handlers
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.tabs.create({ url: 'index.html' });
 });
-// Watch for Document Changes
 chrome.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
         if(key === 'tdx_options') {
-            Object.keys(newValue).forEach(key => {
-                SETTINGS[key] = newValue[key];
-            });
-            console.log("Settings Updated from remote storage");
+            updateSettings();
         };
     }
 });
@@ -96,9 +96,31 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 throw new Error('Failed to add event');
             }
             break;
+        case 'UPDATE_SETTINGS':
+            console.log("Updating Settings");
+            updateSettings();
+            break;
         default:
             console.log('Invalid function');
             console.log(request.fn);
             break;
     }
 });
+// Utility Functions
+const updateSettings = async () => {
+    chrome.storage.sync.get("tdx_options", (data) => {
+        if (!data.tdx_options) {
+            console.log("No settings found");
+            return;
+        }
+        Object.keys(data.tdx_options).forEach(key => {
+            SETTINGS[key] = data.tdx_options[key];
+        });
+        console.log("Settings Updated");
+    });
+};
+
+//init
+(async () => {
+    updateSettings();
+})();
