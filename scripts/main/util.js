@@ -11,6 +11,9 @@ const SETTINGS = {};
     Object.keys(settings).forEach(key => {
         SETTINGS[key] = settings[key];
     });
+    // Create the Notifications Element
+    const notificationWindow = generateNotificationWindow();
+    document.body.appendChild(notificationWindow);
     // Start Local Page Script;
     init();
 })();
@@ -89,4 +92,78 @@ function getToday() {
     day = day < 10 ? `0${day}` : day;
     date = [month, day, year];
     return `${date[2]}-${date[0]}-${date[1]} ${time}`;
+}
+
+function generateNotificationWindow() {
+    // Create the Notification Window
+    const notificationWindow = document.createElement('div');
+    notificationWindow.id = 'notificationWindow';
+    notificationWindow.classList.add("btn-primary");
+    notificationWindow.style = `
+        position: fixed;
+        bottom: 1rem;
+        right: -100%;
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        flex-flow: column;
+        transition: right 0.5s;
+        transition: opacity 0.5s;
+        opacity: 0;
+    `;
+    // Create the Header
+    const header = document.createElement('div');
+    header.style = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    `;
+    // Create the Title
+    const title = document.createElement('h3');
+    title.style.color = 'white';
+    title.style.fontWeight = 'bold';
+    title.innerHTML = 'Placeholder Title';
+    // Create the Close Button
+    const closeButton = document.createElement('span');
+    closeButton.innerHTML = '&times;';
+    closeButton.style.cursor = 'pointer';
+    closeButton.onclick = () => {
+        closeNotification();
+    };
+    // Create the Message
+    const message = document.createElement('p');
+    message.id = 'notificationBody';
+    message.innerHTML = 'Placeholder Message. This will be replaced by the actual message.';
+    // Append Elements
+    header.appendChild(title);
+    header.appendChild(closeButton);
+    notificationWindow.appendChild(header);
+    notificationWindow.appendChild(message);
+    // Return the Notification Window
+    return notificationWindow;
+}
+
+const openNotification = (title, message) => {
+    const notificationWindow = document.getElementById('notificationWindow');
+    console.log(notificationWindow);
+    notificationWindow.querySelector("h3").innerHTML = title;
+    notificationWindow.querySelector("#notificationBody").innerHTML = message;
+    notificationWindow.style.right = '1rem';
+    notificationWindow.style.opacity = 1;
+}
+
+const closeNotification = () => {
+    const notificationWindow = document.getElementById('notificationWindow');
+    notificationWindow.style.right = '-100%';
+    notificationWindow.style.opacity = 0;
+}
+
+const Notify = (title = "Unset", message = "Unset", time = 15) => {
+    time = time*1000;
+    openNotification(title, message);
+    setTimeout(() => {
+        closeNotification();
+    }, time);
 }
