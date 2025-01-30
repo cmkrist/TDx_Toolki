@@ -15,18 +15,17 @@ const StatusIDs = {
 
 async function init() {
     // Insert the auto schedule checkbox
-    document.getElementById("NewStatusId").parentElement.appendChild(generateAutoSchedule());
+    document.getElementById("NewStatusId").parentElement.appendChild(generatePluginOptions());
     console.log("Submission Watcher Loaded : " + tdxId);
     document.getElementById("NewStatusId").addEventListener("change", function () {
         const statusId = this.value;
-        const statusName = StatusIDs[statusId];
         if (statusId === "86") {
-            document.getElementById("auto-schedule-container").style.display = "block";
+            document.getElementById("plugin-options").style.display = "flex";
         } else {
-            document.getElementById("auto-schedule-container").style.display = "none";
+            document.getElementById("plugin-options").style.display = "none";
         }
     });
-    document.getElementById("NewStatusId").value === "86" ? document.getElementById("auto-schedule-container").style.display = "block" : document.getElementById("auto-schedule-container").style.display = "none";
+    document.getElementById("NewStatusId").value === "86" ? document.getElementById("plugin-options").style.display = "flex" : document.getElementById("plugin-options").style.display = "none";
     watchForSubmissions();
 }
 function watchForSubmissions() {
@@ -35,6 +34,7 @@ function watchForSubmissions() {
         // Watch for all form submissions on the page
         document.addEventListener('submit', function (event) {
             if (document.getElementById("auto-schedule").checked === false) return;
+            const email = document.querySelector(".media-body div a").textContent.trim()
             const formData = new FormData(event.target);
             const data = {};
 
@@ -51,21 +51,38 @@ function watchForSubmissions() {
                     description: data["Comments.Content"],
                     start: dateFixer(data.NewGoesOffHoldDate),
                     end: addTimeToDate(dateFixer(data.NewGoesOffHoldDate), SETTINGS.default_duration),
-                    url: window.location.href.replace("Update", "TicketDet")
+                    url: window.location.href.replace("Update", "TicketDet"),
+                    requestor: (document.getElementById("add-requested").checked?email:false)
                 }
             });
         });
     }
 }
 
+function generateAddRequested() {
+    const addRequested = document.createElement('div');
+    addRequested.classList.add('form-group');
+    addRequested.id = "add-requested-container";
+    addRequested.style.marginLeft = "1.5rem";
+    const label = document.createElement('label');
+    label.textContent = "Add Requested to Appt";
+    label.style.marginLeft = ".75rem";
+    const input = document.createElement('input');
+    input.type = "checkbox";
+    input.id = "add-requested";
+    input.checked = false;
+    addRequested.appendChild(input);
+    addRequested.appendChild(label);
+    return addRequested;
+}
+
 function generateAutoSchedule() {
     const autoSchedule = document.createElement('div');
     autoSchedule.classList.add('form-group');
-    autoSchedule.style.display = "none";
     autoSchedule.id = "auto-schedule-container";
     const label = document.createElement('label');
     label.textContent = "Auto Schedule";
-    label.style.marginLeft = "1rem";
+    label.style.marginLeft = ".75rem";
     const input = document.createElement('input');
     input.type = "checkbox";
     input.id = "auto-schedule";
@@ -73,4 +90,14 @@ function generateAutoSchedule() {
     autoSchedule.appendChild(input);
     autoSchedule.appendChild(label);
     return autoSchedule;
+}
+
+function generatePluginOptions() {
+    const options = document.createElement('div');
+    options.style.display = "none";
+    options.style.alignItems = "center";
+    options.id = "plugin-options";
+    options.appendChild(generateAutoSchedule());
+    options.appendChild(generateAddRequested());
+    return options;
 }
