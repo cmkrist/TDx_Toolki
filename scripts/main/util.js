@@ -55,7 +55,7 @@ function dateFixer(date) {
     const year = dateArr[2];
     // Fix the time
     const ampm = dth[2] || "AM";
-    const timeArr = dth[1].split(":");
+    const timeArr = dth[1].split(":") || ["00", "00"];
     const hour = (ampm === "PM" ? parseInt(timeArr[0]) + 12 : doubleDigit(timeArr[0]));
     const minute = doubleDigit(timeArr[1]);
     return `${year}-${month}-${day} ${hour}:${minute}`;
