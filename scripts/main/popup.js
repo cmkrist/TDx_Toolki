@@ -10,7 +10,7 @@ const autoSchedule = document.getElementById('auto-schedule');
     // Load Settings from storage
     let settings = (await chrome.storage.sync.get('tdx_options')).tdx_options;
     if (!settings) {
-        console.error('No settings found');
+        console.log('No settings found');
         settings = {
             default_calendar: null,
             default_duration: 60,
@@ -57,7 +57,6 @@ const setSaveButtonListener = () => {
                 'auto_schedule': autoScheduleElement.checked
             }
         });
-        chrome.runtime.sendMessage({ fn: 'UPDATE_SETTINGS' });
         window.close();
     });
 };
@@ -85,6 +84,10 @@ const getAllOwnedCalendars = async () => {
                 }
             });
             return calendars;
+        } else {
+            console.error('Failed to get calendars');
+            console.error(response);
+            return [];
         }
     } catch (error) {
         console.error(error);

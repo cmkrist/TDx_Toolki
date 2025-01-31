@@ -11,6 +11,10 @@ chrome.runtime.onInstalled.addListener(async () => {
     if (! await chrome.storage.sync.get('tdx_options')) {
         chrome.tabs.create({ url: 'index.html' });
     }
+    // Get Calendar Permissions on Install
+    const token = await chrome.identity.getAuthToken({ interactive: true });
+    console.log(token);
+    console.log('TDx Extension Installed');
 });
 chrome.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -82,9 +86,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     dateTime: new Date(request.data.end).toISOString(),
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
                 },
-                
+
             };
-            if(request.data.requestor) {
+            if (request.data.requestor) {
                 evnt.attendees = [
                     { email: request.data.requestor }
                 ]
