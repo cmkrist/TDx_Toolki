@@ -13,9 +13,9 @@ chrome.runtime.onInstalled.addListener(async () => {
     }
     // Get Calendar Permissions on Install
     const token = await chrome.identity.getAuthToken({ interactive: true });
-    console.log(token);
     console.log('TDx Extension Installed');
 });
+
 chrome.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
         if (key === 'tdx_options') {
